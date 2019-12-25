@@ -26,3 +26,17 @@ class BookSerializer(serializers.ModelSerializer, ):
         fields = ['id', 'genre', 'name', 'description', 'image', 'file', 'author']
 
 
+class BookSerializerWithoutGenre(serializers.ModelSerializer, ):
+    author = AuthorSerializer
+
+    class Meta:
+        model = Book
+        fields = ['id', 'name', 'description', 'image', 'file', 'author']
+
+
+class BookSerializerWithoutAuthor(serializers.ModelSerializer, ):
+    genre = GenreSerializer(many=True)
+
+    class Meta:
+        model = Book
+        fields = ['id', 'genre', 'name', 'description', 'image', 'file']

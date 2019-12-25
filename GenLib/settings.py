@@ -83,11 +83,12 @@ WSGI_APPLICATION = 'GenLib.wsgi.application'
 
 DATABASES = {
     'default': {
+        'HOST': 'b6jgpe1owdorgyl6nkkc-postgresql.services.clever-cloud.com',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'genlib',
-        'USER': 'izzat',
-        'PASSWORD': '1',
-        'PORT': '',
+        'NAME': 'b6jgpe1owdorgyl6nkkc',
+        'USER': 'udtlec18v7fmvmknbali',
+        'PASSWORD': 'M7uiHRg8FZcUR9TZjJMI',
+        'PORT': '5432',
     }
 }
 

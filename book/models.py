@@ -22,6 +22,7 @@ class Book(models.Model):
 class Genre(models.Model):
     name_ru = models.CharField(max_length=255, blank=True, null=True)
     name_en = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
 
     class Meta:
         db_table = 'genre'

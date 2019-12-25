@@ -1,17 +1,16 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from book.views import BookAPIView, GenreAPIView, AuthorAPIView, GenreDetailAPIView, BookDetailAPIView, \
-    AuthorDetailAPIView
+from book.views import BookViewSet, AuthorViewSet, GenreCRUDViewSet
+
+router = DefaultRouter()
+router.register(r'books', BookViewSet, basename='book')
+router.register(r'author', AuthorViewSet, basename='author')
+router.register(r'genre', GenreCRUDViewSet, basename='genre')
 
 urlpatterns = [
-    #                   List
-    path('book/list/', BookAPIView.as_view(), name='book-list'),
-    path('genre/list/', GenreAPIView.as_view(), name='genre-list'),
-    path('author/list/', AuthorAPIView.as_view(), name='author-list'),
-    #                   Detail
-    path('book/detail/<int:id>/', BookDetailAPIView.as_view(), name='book-detail'),
-    path('genre/detail/<int:id>/', GenreDetailAPIView.as_view(), name='genre-detail'),
-    path('author/detail/<int:id>/', AuthorDetailAPIView.as_view(), name='author-detail'),
+
 ]
+urlpatterns += router.urls
