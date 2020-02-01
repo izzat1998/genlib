@@ -11,6 +11,7 @@ class Book(models.Model):
     genre = models.ManyToManyField('Genre', related_name='books', blank=True)
     file = models.FileField(upload_to='books', blank=True, null=True)
     author = models.ForeignKey('Author', related_name='books', on_delete=models.SET_NULL, null=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'book'

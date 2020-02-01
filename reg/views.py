@@ -29,12 +29,12 @@ class UserRegister(APIView):
             return Response({'error': 'Please provide both username and password'}, status=HTTP_400_BAD_REQUEST)
         if not username:
             username = str(first_name.lower) + str(last_name.lower)
-        n = random.randint(100000, 999999)
-        send_mail('Hello It is from GenLib',
-                  f'This is activation code {n}',
-                  'izzattilla706@gmail.com',
-                  [f'{email}'],
-                  fail_silently=False)
+        # n = random.randint(100000, 999999)
+        # send_mail('Hello It is from GenLib',
+        #           f'This is activation code {n}',
+        #           'izzattilla706@gmail.com',
+        #           [f'{email}'],
+        #           fail_silently=False)
         user = CustomUser.objects.create(first_name=first_name, last_name=last_name, username=username,
                                          password=password, phone_number=phone_number)
         token, _ = Token.objects.get_or_create(user=user)
@@ -55,7 +55,8 @@ class UserLogin(APIView):
             return Response({'error': 'Please provide both username and password'},
                             status=HTTP_400_BAD_REQUEST)
         try:
-            user = CustomUser.objects.get(username=username, password=password)
+            user = CustomUser.objects.get(user_id=username)
+            user.check_password(password)
         except:
             return Response({'error': 'Invalid Credentials'},
                             status=HTTP_404_NOT_FOUND)
