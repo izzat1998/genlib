@@ -38,8 +38,8 @@ class UserRegister(APIView):
         user = CustomUser.objects.create(first_name=first_name, last_name=last_name, username=username,
                                          password=password, phone_number=phone_number)
         token, _ = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key,
-                         'user_id': user.user_id},
+        return Response({'username': user.user_id,
+                         'password': user.password},
 
                         status=HTTP_200_OK)
 
