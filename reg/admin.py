@@ -7,7 +7,7 @@ from reg.models import CustomUser
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'user_id', 'phone_number', 'email']
+    list_display = ['first_name', 'last_name', 'username', 'phone_number', 'email']
     pass
 
 
