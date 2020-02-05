@@ -46,7 +46,7 @@ class UserLogin(APIView):
             return Response({'error': 'Please provide both username and password'},
                             status=HTTP_400_BAD_REQUEST)
         try:
-            user = CustomUser.objects.get(user_id=username)
+            user = CustomUser.objects.get(username=username)
             user.check_password(password)
         except:
             return Response({'error': 'Invalid Credentials'},
