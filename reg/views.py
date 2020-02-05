@@ -21,27 +21,18 @@ class UserRegister(APIView):
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
         username = request.data.get('username')
-        email = request.data.get('email')
         password = request.data.get("password")
-        phone_number = request.data.get("phone_number")
 
         if first_name is None or last_name is None:
-            return Response({'error': 'Please provide both username and password'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Please provide first_name or last_name'}, status=HTTP_400_BAD_REQUEST)
         if not username:
-            username = str(first_name.lower) + str(last_name.lower)
-        # n = random.randint(100000, 999999)
-        # send_mail('Hello It is from GenLib',
-        #           f'This is activation code {n}',
-        #           'izzattilla706@gmail.com',
-        #           [f'{email}'],
-        #           fail_silently=False)
+            return Response({'error': 'Please provide username'}, status=HTTP_400_BAD_REQUEST)
         user = CustomUser.objects.create(first_name=first_name, last_name=last_name, username=username,
-                                         password=password, phone_number=phone_number)
-        token, _ = Token.objects.get_or_create(user=user)
-        return Response({'username': user.user_id,
-                         'password': user.password},
-
-                        status=HTTP_200_OK)
+                                         password=password)
+        token = Token.objects.create(user=user)
+        return Response({'username': user.username,
+                         'password': user.password,
+                         'token': token.key}, status=HTTP_200_OK, )
 
 
 class UserLogin(APIView):
