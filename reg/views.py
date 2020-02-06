@@ -28,6 +28,10 @@ class UserRegister(APIView):
         username = first_name.lower() + last_name.lower()
         if CustomUser.objects.filter(username=username).count() > 0:
             username = last_name.lower() + first_name.lower()
+        if CustomUser.objects.filter(username=username).count() > 1:
+            username = last_name + first_name.lower()
+        if CustomUser.objects.filter(username=username).count() > 2:
+            username = last_name.lower() + first_name
         user = CustomUser.objects.create(first_name=first_name, last_name=last_name, username=username,
                                          password=password, email=email)
         token = Token.objects.create(user=user)
