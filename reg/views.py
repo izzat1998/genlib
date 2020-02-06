@@ -20,15 +20,16 @@ class UserRegister(APIView):
     def post(self, request):
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
-        username = request.data.get('username')
+        email = request.data.get("email")
         password = request.data.get("password")
 
         if first_name is None or last_name is None:
             return Response({'error': 'Please provide first_name or last_name'}, status=HTTP_400_BAD_REQUEST)
-        if not username:
-            return Response({'error': 'Please provide username'}, status=HTTP_400_BAD_REQUEST)
+        username = first_name.lower() + last_name.lower()
+        if CustomUser.objects.filter(username=username).count() > 0:
+            username = last_name.lower() + first_name.lower()
         user = CustomUser.objects.create(first_name=first_name, last_name=last_name, username=username,
-                                         password=password)
+                                         password=password, email=email)
         token = Token.objects.create(user=user)
         return Response({'username': user.username,
                          'password': user.password,
