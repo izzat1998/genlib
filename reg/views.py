@@ -16,23 +16,31 @@ from django.core.mail import send_mail
 
 class UserRegister(APIView):
     permission_classes = (AllowAny,)
+    first_name = ''
+    last_name = ''
+
+    def get(self, request):
+        self.first_name = request.data.get("first_name")
+        self.last_name = request.data.get("last_name")
+        usernames = [self.first_name.lower() + str(random.randrange(1, 100)) + self.last_name.lower(),
+                     self.last_name.lower() + str(random.randrange(1, 100)) + self.first_name.lower(),
+                     self.last_name.lower() + str(random.randrange(1, 100)),
+                     self.first_name.lower() +str(random.randrange(1, 100)),
+                     self.first_name[:3].lower()+ str(random.randrange(1, 100)) + self.last_name[:3].lower(),
+                     self.last_name[:3].lower() + str(random.randrange(1, 100)) + self.first_name[:3].lower()
+                     ]
+        return Response({'usernames': usernames}, status=HTTP_200_OK)
 
     def post(self, request):
-        first_name = request.data.get("first_name")
-        last_name = request.data.get("last_name")
+        username = request.data.get("username")
         email = request.data.get("email")
         password = request.data.get("password")
+        phone_number = request.data.get("phone_number")
 
-        if first_name is None or last_name is None:
-            return Response({'error': 'Please provide first_name or last_name'}, status=HTTP_400_BAD_REQUEST)
-        username = first_name.lower() + last_name.lower()
         if CustomUser.objects.filter(username=username).count() > 0:
-            username = last_name.lower() + first_name.lower()
-        if CustomUser.objects.filter(username=username).count() > 1:
-            username = last_name + first_name.lower()
-        if CustomUser.objects.filter(username=username).count() > 2:
-            username = last_name.lower() + first_name
-        user = CustomUser.objects.create(first_name=first_name, last_name=last_name, username=username,
+            return Response({'error': 'This username is already exists'}, status=HTTP_400_BAD_REQUEST)
+
+        user = CustomUser.objects.create(first_name=self.first_name, last_name=self.last_name, username=username,
                                          password=password, email=email)
         token = Token.objects.create(user=user)
         return Response({'username': user.username,
