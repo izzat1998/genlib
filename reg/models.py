@@ -1,3 +1,5 @@
+import datetime
+from django.utils import timezone
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 
@@ -12,3 +14,14 @@ class CustomUser(AbstractUser):
         return self.first_name
 
 
+class SecurityNumber(models.Model):
+    secure_number = models.IntegerField()
+    email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    expiration_date = models.DateTimeField(default=timezone.now() + datetime.timedelta(minutes=5))
+
+    class Meta:
+        db_table = 'security_number'
+
+    def __str__(self):
+        return str(self.secure_number)

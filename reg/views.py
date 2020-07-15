@@ -10,38 +10,61 @@ from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NO
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 
-from reg.models import CustomUser
+from reg.models import CustomUser, SecurityNumber
 from django.core.mail import send_mail
+import re
+
+REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+
+def check_mail(email):
+    # pass the regular expression
+    # and the string in search() method
+    if (re.search(REGEX, email)):
+        return True
+
+    else:
+        return False
+
+
+class UserRegisterConfirmEmail(APIView):
+
+    def post(self, request):
+        email = request.data.get("email")
+        if check_mail(email):
+            confirmation_number = (random.randint(100000, 999999))
+            send_mail('GenLib', 'Security number:{}'.format(confirmation_number),
+                      'izzattilla706@gmail.com', [email], fail_silently=False)
+            SecurityNumber.objects.create(secure_number=confirmation_number, email=email)
+            return Response({'status': True,
+                             'email': email})
+        else:
+            return Response({'status': 'Email not Valid'})
+
+
+class UserRegisterCheckNumber(APIView):
+    def post(self, request):
+        security_number = request.data.get('security_number')
+        try:
+            secure_number = SecurityNumber.objects.get(secure_number=security_number)
+        except SecurityNumber.DoesNotExist:
+            secure_number = None
+        if secure_number is not None:
+            secure_number.delete()
+            return Response({'Confirmed': True})
+        else:
+            return Response({'Confimed': False})
 
 
 class UserRegister(APIView):
     permission_classes = (AllowAny,)
-    first_name = ''
-    last_name = ''
-
-    def get(self, request):
-        self.first_name = request.data.get("first_name")
-        self.last_name = request.data.get("last_name")
-        usernames = [self.first_name.lower() + str(random.randrange(1, 100)) + self.last_name.lower(),
-                     self.last_name.lower() + str(random.randrange(1, 100)) + self.first_name.lower(),
-                     self.last_name.lower() + str(random.randrange(1, 100)),
-                     self.first_name.lower() +str(random.randrange(1, 100)),
-                     self.first_name[:3].lower()+ str(random.randrange(1, 100)) + self.last_name[:3].lower(),
-                     self.last_name[:3].lower() + str(random.randrange(1, 100)) + self.first_name[:3].lower()
-                     ]
-        return Response({'usernames': usernames}, status=HTTP_200_OK)
 
     def post(self, request):
-        username = request.data.get("username")
+        first_name = request.data.get("first_name")
+        last_name = request.data.get("last_name")
         email = request.data.get("email")
         password = request.data.get("password")
-        phone_number = request.data.get("phone_number")
-
-        if CustomUser.objects.filter(username=username).count() > 0:
-            return Response({'error': 'This username is already exists'}, status=HTTP_400_BAD_REQUEST)
-
-        user = CustomUser.objects.create(first_name=self.first_name, last_name=self.last_name, username=username,
-                                         password=password, email=email)
+        user = CustomUser.objects.create(first_name=first_name, last_name=last_name, email=email, password=password)
         token = Token.objects.create(user=user)
         return Response({'username': user.username,
                          'password': user.password,
@@ -53,13 +76,13 @@ class UserLogin(APIView):
 
     def post(self, request):
 
-        username = request.data.get("username")
+        email = request.data.get("email")
         password = request.data.get("password")
-        if username is None or password is None:
+        if email is None or password is None:
             return Response({'error': 'Please provide both username and password'},
                             status=HTTP_400_BAD_REQUEST)
         try:
-            user = CustomUser.objects.get(username=username)
+            user = CustomUser.objects.get(email=email)
             user.check_password(password)
         except:
             return Response({'error': 'Invalid Credentials'},
