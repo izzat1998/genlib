@@ -65,7 +65,7 @@ class UserRegister(APIView):
         last_name = request.data.get("last_name")
         email = request.data.get("email")
         password = request.data.get("password")
-        user = CustomUser.objects.create(username=datetime.datetime.time(), first_name=first_name, last_name=last_name,
+        user = CustomUser.objects.create(username=datetime.datetime.now(), first_name=first_name, last_name=last_name,
                                          email=email, password=password)
         token = Token.objects.create(user=user)
         return Response({'username': user.username,
