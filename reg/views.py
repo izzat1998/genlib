@@ -1,3 +1,4 @@
+import datetime
 import random
 
 from django.shortcuts import render
@@ -64,7 +65,8 @@ class UserRegister(APIView):
         last_name = request.data.get("last_name")
         email = request.data.get("email")
         password = request.data.get("password")
-        user = CustomUser.objects.create(first_name=first_name, last_name=last_name, email=email, password=password)
+        user = CustomUser.objects.create(username=datetime.datetime.time(), first_name=first_name, last_name=last_name,
+                                         email=email, password=password)
         token = Token.objects.create(user=user)
         return Response({'username': user.username,
                          'password': user.password,

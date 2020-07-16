@@ -13,9 +13,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.first_name
 
-    def save(self, *args, **kwargs):
-        self.username = self.email
-
 
 class SecurityNumber(models.Model):
     secure_number = models.IntegerField()
