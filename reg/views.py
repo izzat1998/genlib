@@ -54,7 +54,7 @@ class UserRegisterCheckNumber(APIView):
             secure_number.delete()
             return Response({'Confirmed': True})
         else:
-            return Response({'Confimed': False})
+            return Response({'Confirmed': False})
 
 
 class UserRegister(APIView):
