@@ -2,6 +2,7 @@ from django.db import models
 
 
 # Create your models here.
+from GenLib import settings
 
 
 class Book(models.Model):
@@ -15,6 +16,10 @@ class Book(models.Model):
 
     class Meta:
         db_table = 'book'
+
+    @property
+    def image_absolute_url(self):
+        return "https://{0}{1}".format(settings.SERVER_NAME, self.image.url)
 
     def __str__(self):
         return self.name

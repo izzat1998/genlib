@@ -12,6 +12,7 @@ SECRET_KEY = 'i026k-hquzm7+_(pej0lwkjo!1gy#1jlcb=pknqd3zhf7m=1^f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 AUTH_USER_MODEL = 'reg.CustomUser'
+SERVER_NAME = '46.101.124.149'
 ALLOWED_HOSTS = ['*']
 # Application definition
 
