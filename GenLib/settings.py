@@ -12,7 +12,6 @@ SECRET_KEY = 'i026k-hquzm7+_(pej0lwkjo!1gy#1jlcb=pknqd3zhf7m=1^f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 AUTH_USER_MODEL = 'reg.CustomUser'
-SERVER_NAME = '46.101.124.149:8000'
 ALLOWED_HOSTS = ['*']
 # Application definition
 
@@ -141,9 +140,10 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MEDIA_URL = '/media/'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = 'izzattilla706@gmail.com'
